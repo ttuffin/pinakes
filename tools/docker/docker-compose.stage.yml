@@ -123,7 +123,14 @@ services:
       - '../keycloak_setup/login_theme/styles.css:/opt/jboss/keycloak/themes/pinakes/login/resources/css/styles.css:z'
       - '../keycloak_setup/login_theme/background.png:/opt/jboss/keycloak/themes/pinakes/login/resources/img/background.png:z'
   postgres:
-    image: 'docker.io/postgres:13-alpine'
+    image: postgresql:13-alpine
+    build:
+      context: ../postgresql
+    command: >
+      -c ssl=on
+      -c ssl_cert_file=/etc/ssl_config/server.crt
+      -c ssl_key_file=/etc/ssl_config/server.key
+      -c ssl_ca_file=/etc/ssl_config/root.crt
     volumes:
       - 'pg_data:/var/lib/postgresql/data'
       - "../docker/initdb:/docker-entrypoint-initdb.d:z"
